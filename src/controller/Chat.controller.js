@@ -1,16 +1,16 @@
-import chatModel from "../model/chat.model.js";
+import { io } from '../app.js';
+import chatModel from '../model/chat.model.js';
 
 const chatController = {
   // Get all messages in a conversation
   getAllMessages: async (req, res) => {
-    const { username1, username2 } = req.params;
+    const { sender,recipient} = req.body;
 
     try {
-      // Find all messages in the conversation between username1 and username2
-      const messages = await chatModel.find({
+      const messages =  await chatModel.find({
         $or: [
-          { sender: username1, recipient: username2 },
-          { sender: username2, recipient: username1 },
+          { sender: sender, recipient: recipient },
+          { sender: sender, recipient: sender },
         ],
       }).sort({ timestamp: 1 });
 
@@ -20,10 +20,9 @@ const chatController = {
     }
   },
 
-  // Send a new message
   sendMessage: async (req, res) => {
     
-    const {sender,recipient, content,channel } = req.body;
+    const {sender,recipient, content ,channel} = req.body;
 
     try {
       // Create a new message
@@ -31,16 +30,17 @@ const chatController = {
         sender: sender,
         recipient: recipient,
         content:content,
-        channel: channel, // You can generate a unique channel name
+        channel: channel, 
       });
 
-      // Save the message to the database
       await newMessage.save();
 
+      io.emit('message', newMessage); 
 
+     
       return res.json({ message: 'Message sent successfully', newMessage });
     } catch (error) {
-      console.log(error);
+      return res.status(500).json({ message: 'Internal server error' });
     }
   },
 };

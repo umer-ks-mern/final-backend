@@ -18,6 +18,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   return res.json({ message: "Made By Umer" });
 });
+export { io };
 
 io.on('connection', (socket) => {
   console.log('A user connected');
