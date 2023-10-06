@@ -15,8 +15,8 @@ const userController = {
     return res.json(users);
   },
   getSingle: async (req, res) => {
-    const { id } = req.params;
-    const user = await userModel.findById(id);
+    const { email } = req.params;
+    const user = await userModel.find(email);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
