@@ -118,6 +118,30 @@ const postController = {
       res.status(500).json({ message: "An error occurred" });
     }
   },
+  followingPosts: async (req, res) => {
+    try {
+      const { userId } = req.body;
+
+      const user = await userModel.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const followingList = user.following;
+
+      //finding posts from users in the followingList
+      const posts = await postModel
+        .find({
+          user_id: { $in: followingList },
+        })
+        .populate("userId");
+
+      res.status(200).json(posts);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "An error occurred" });
+    }
+  },
 };
 
 export default postController;

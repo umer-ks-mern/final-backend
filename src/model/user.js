@@ -27,6 +27,12 @@ const userSchema = new mongoose.Schema(
     bio: {
       type: "string",
     },
+    followers_requests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
     followers: [
       {
         type: mongoose.Schema.Types.ObjectId,
