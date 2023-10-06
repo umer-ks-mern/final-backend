@@ -26,7 +26,7 @@ const userController = {
     const { name, username, email, phone, password } = req.body;
 
     const hashPassword = await bcryptjs.hash(password, 10);
-
+    
     const user = await userModel.create({
       name,
       username,
@@ -52,10 +52,6 @@ const userController = {
 
     if (body.email) {
       user.email = body.email;
-    }
-
-    if (body.password) {
-      user.password = body.password;
     }
 
     await user.save();

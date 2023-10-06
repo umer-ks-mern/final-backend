@@ -5,6 +5,8 @@ import likeController from "../controller/likes.js";
 import loginAuth from "../middleware/loginAuthorization.js";
 import roleAuth from "../middleware/roleAuthorization.js";
 import postValidator from "../validator/validatePost.js";
+import upload from "../middleware/multer.js";
+
 
 const postRouter = new Router();
 postRouter.get("/posts", loginAuth, roleAuth, postController.getAll);
@@ -13,7 +15,7 @@ postRouter.get("/post-delete/:id", postController.delete);
 postRouter.put("/post/:id", postController.update);
 postRouter.post(
   "/post",
-  loginAuth,
+  upload.single('file'),
   postValidator.create,
   postController.create
 );
@@ -28,7 +30,6 @@ postRouter.post(
 postRouter.get("/comment/:post_id/:comment_id", commentController.getSingle);
 
 postRouter.post("/likes/:id", likeController.updateLikes);
-
 postRouter.get("/user-posts/:user_id", postController.userPosts);
 postRouter.get("/recent-posts/", postController.recentPosts);
 postRouter.get("/email-posts/:email", postController.emailPosts);
