@@ -7,9 +7,10 @@ import WebSocket from "ws";
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
+const port = process.env.PORT || 3000;
 
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+// const server = http.createServer(app);
+// const wss = new WebSocket.Server({ server });
 
 connectDB();
 app.use(express.urlencoded({ extended: true }));
@@ -18,41 +19,42 @@ app.get("/", (req, res) => {
   return res.json({ message: "Made By Umer" });
 });
 
-wss.on("connection", (ws) => {
-  //handle websocket connections here
-  ws.on("message", (message) => {
-    //Handle incoming WebSockets messages (e.g., User Authentication)
-  });
-});
+// wss.on("connection", (ws) => {
+//   //handle websocket connections here
+//   ws.on("message", (message) => {
+//     //Handle incoming WebSockets messages (e.g., User Authentication)
+//   });
+// });
 
 const connectedClients = new Map(); // Map to store web socket connection
-wss.on('connection', (ws) => {
-  ws.on('message', (message) => {
-    const parsedMessage = JSON.parse(message);
+// wss.on('connection', (ws) => {
+//   ws.on('message', (message) => {
+//     const parsedMessage = JSON.parse(message);
 
-    if(parsedMessage.type === 'chat') {
-      const senderId = connectedClients.get(ws)?.userId;
-      if(senderId) {
-        wss.clients.forEach((client) => {
-          if(client !== ws) {
-            client.send(JSON.stringify({ 
-              type: 'chat', content: parsedMessage.content, senderId
-            }));
-          }
-        });
-      }
-    }
-  });
+//     if(parsedMessage.type === 'chat') {
+//       const senderId = connectedClients.get(ws)?.userId;
+//       if(senderId) {
+//         wss.clients.forEach((client) => {
+//           if(client !== ws) {
+//             client.send(JSON.stringify({ 
+//               type: 'chat', content: parsedMessage.content, senderId
+//             }));
+//           }
+//         });
+//       }
+//     }
+  
+//   });
 
 
-  connectedClients.set(ws, {
-    userId: 'someUserId'
-  });
-});
+//   connectedClients.set(ws, {
+//     userId: 'someUserId'
+//   });
+// });
 
 
 
 app.use(mainRouter);
-app.listen(process.env.PORT || 3301, () => {
-  console.log(`Social App ka Server Port:${process.env.PORT} py active ha`);
+app.listen(port, () => {
+  console.log(`Social App Server is active on Port:${process.env.PORT}`);
 });
