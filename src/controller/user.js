@@ -15,8 +15,8 @@ const userController = {
     return res.json(users);
   },
   getSingle: async (req, res) => {
-    const { id } = req.params;
-    const user = await userModel.findById(id);
+    const { email } = req.params;
+    const user = await userModel.find({email: email});
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -40,8 +40,8 @@ const userController = {
 
   update: async (req, res) => {
     const body = req.body;
-    const id = req.params.id;
-    const user = await userModel.findById(id);
+    const email = req.params.email;
+    const user = await userModel.find({email: email});
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -53,9 +53,8 @@ const userController = {
     if (body.email) {
       user.email = body.email;
     }
-
-    if (body.password) {
-      user.password = body.password;
+    if (body.bio) {
+      user.bio = body.bio
     }
 
     await user.save();
