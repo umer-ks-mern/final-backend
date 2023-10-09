@@ -1,5 +1,6 @@
 import userModel from "../model/user.js";
 import bcryptjs from "bcryptjs";
+import mongoose from "mongoose";
 
 const userController = {
   getAll: async (req, res) => {
@@ -26,7 +27,7 @@ const userController = {
     const { name, username, email, phone, password } = req.body;
 
     const hashPassword = await bcryptjs.hash(password, 10);
-
+    
     const user = await userModel.create({
       name,
       username,
@@ -39,36 +40,26 @@ const userController = {
   },
 
   update: async (req, res) => {
-    const body = req.body;
-    const email = req.params.email;
-    const user = await userModel.find({email: email});
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    if (body.name) {
-      user.name = body.name;
-    }
-
-    if (body.email) {
-      user.email = body.email;
-    }
-    if (body.bio) {
-      user.bio = body.bio
-    }
-
-    await user.save();
+    const { email } = req.params;
+    const body=req.body;
+    const user = await userModel.findOne({ email: email });
+    if (!user) 
+      return res.json({ message: "User not found" });
+ user.name=body.name;
+ user.email=body.email;
+ user.bio=body.bio;
+  await user.save();
     return res.json({ message: "User Updated", user });
   },
 
   addBio: async (req, res) => {
-    const id = req.params.id;
-    const user = await userModel.findById(id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    user.bio = body.bio;
-    await user.save();
+    const { email } = req.params;
+    const user = await userModel.findOne({ email: email });
+    if (!user) 
+      return res.json({ message: "User not found" });
+ const bio=req.body;
+ user.bio=bio;
+  await user.save();
     return res.json({ message: "Bio Added" });
   },
 

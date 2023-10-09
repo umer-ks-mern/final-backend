@@ -5,6 +5,8 @@ import cors from "cors";
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
+import cors from 'cors';
+
 connectDB();
 
 const corsOptions = {
@@ -22,7 +24,9 @@ app.get("/", (req, res) => {
   return res.json({ message: "Instagram project made by Team-Umer" });
 });
 
+
 app.use(mainRouter);
 app.listen(process.env.PORT, () => {
   console.log(`Social App ka Server Port:${process.env.PORT} py active ha`);
 });
+

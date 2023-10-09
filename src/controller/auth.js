@@ -17,8 +17,8 @@ const signInController = {
     const result = await bcryptjs.compare(password, user.password);
 
     if (result) {
-      const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY, {
-        algorithm: process.env.ALGO,
+      const token = jwt.sign({ user }, "cghcghcgtyfuiuyggtctcghvhgvgftfukfhgkvkvkgctcgkt", {
+        algorithm: "HS256",
         expiresIn: "24h",
       });
       loginEmail(user);

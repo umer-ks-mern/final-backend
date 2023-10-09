@@ -1,4 +1,6 @@
 import postModel from "../model/post.js";
+import multer from 'multer';
+
 const postController = {
   getAll: async (req, res) => {
     const posts = await postModel.find().populate("user_id");
@@ -14,10 +16,12 @@ const postController = {
   },
   create: async (req, res) => {
     const body = req.body;
+    const file= req.file;
     const post = await postModel
       .create({
         caption: body.caption,
         user_id: body.user_id,
+        image: file.filename,
       })
       .then(() => console.log(body))
       .catch((err) => console.log(err));

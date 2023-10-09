@@ -3,7 +3,7 @@ import transport from "../../config/nodemailer.js";
 const otpEmail = ({ email, otp }) => {
   transport.sendMail(
     {
-      from: "umer@gmail.com",
+      from: "zainab@abc.com",
       to: email,
       subject: "OTP",
       html: `
