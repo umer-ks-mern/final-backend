@@ -1,5 +1,5 @@
 import postModel from "../model/post.js";
-import multer from 'multer';
+import multer from "multer";
 
 const postController = {
   getAll: async (req, res) => {
@@ -16,12 +16,10 @@ const postController = {
   },
   create: async (req, res) => {
     const body = req.body;
-    const file= req.file;
-    const post = await postModel
-      .create({
-        caption: body.caption,
-        user_id: body.user_id,
-      })
+    const post = await postModel.create({
+      caption: body.caption,
+      user_id: body.user_id,
+    });
     return res.json({ message: "Post created", post });
   },
 
