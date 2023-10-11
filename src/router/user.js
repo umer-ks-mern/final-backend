@@ -6,19 +6,20 @@ const userRouter = new Router();
 
 userRouter.get("/users", userController.getAll);
 userRouter.get("/users/:search", userController.searchAll);
-userRouter.get("/user/:email", userController.getSingle);
+userRouter.get("/user/:id", userController.getSingle);
+userRouter.get("/user/byemail/:email", userController.getByEmail);
 userRouter.get("/user_delete/:id", userController.delete);
 
 userRouter.post("/signin", signInController.signIn);
 userRouter.post("/signup", userController.signUp);
 
-userRouter.put("/user/:email", userController.update);
+userRouter.put("/user/:id", userController.update);
 userRouter.put("/user/bio/:id", userController.addBio);
 
 //Add a middleware to check if the account is private then add the requests in followers_requests
 userRouter.put(
   "/user/followers/:user_id/:follower_id",
-  userController.updateFollowers 
+  userController.updateFollowers
 );
 userRouter.put(
   "/user/followings/:user_id/:following_id",

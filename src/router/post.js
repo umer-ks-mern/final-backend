@@ -5,7 +5,6 @@ import likeController from "../controller/likes.js";
 import loginAuth from "../middleware/loginAuthorization.js";
 import roleAuth from "../middleware/roleAuthorization.js";
 import postValidator from "../validator/validatePost.js";
-import upload from "../middleware/multer.js";
 
 
 const postRouter = new Router();
@@ -15,7 +14,6 @@ postRouter.get("/post-delete/:id", postController.delete);
 postRouter.put("/post/:id", postController.update);
 postRouter.post(
   "/post",
-  upload.single('file'),
   postValidator.create,
   postController.create
 );

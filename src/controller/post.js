@@ -21,11 +21,7 @@ const postController = {
       .create({
         caption: body.caption,
         user_id: body.user_id,
-        image: file.filename,
       })
-      .then(() => console.log(body))
-      .catch((err) => console.log(err));
-
     return res.json({ message: "Post created", post });
   },
 
