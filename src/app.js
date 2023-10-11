@@ -2,8 +2,6 @@ import express from "express";
 import mainRouter from "./router/index.js";
 import connectDB from "./config/db.js";
 import cors from 'cors';
-import { createReadStream } from "fs";
-import multer from "multer";
 
 let corsOptions = {
   origin: ["http://localhost:5173"],
@@ -16,10 +14,15 @@ import dotenv from "dotenv";
 dotenv.config();
 app.use(cors(corsOptions));
 connectDB();
+
+
+//exposing the public directory of our server to upload and get images
+app.use(express.static("public"));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.get("/", (req, res) => {
-  return res.json({ message: "Made By Umer" });
+  return res.json({ message: "Instagram project made by Team-Umer" });
 });
 
 

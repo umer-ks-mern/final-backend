@@ -1,5 +1,5 @@
 import postModel from "../model/post.js";
-import multer from 'multer';
+
 
 const postController = {
   getAll: async (req, res) => {
@@ -17,13 +17,13 @@ const postController = {
   create: async (req, res) => {
     const body = req.body;
     const file= req.file;
+    console.log(body,file);
     const post = await postModel
       .create({
         caption: body.caption,
         user_id: body.user_id,
-        image: file.filename,
       })
-      .then(() => console.log(body))
+      .then(() => console.log(post))
       .catch((err) => console.log(err));
 
     return res.json({ message: "Post created", post });
@@ -122,17 +122,30 @@ const postController = {
       res.status(500).json({ message: "An error occurred" });
     }
   },
-//  uploadImage: async (req, res) => {
+  followingPosts: async (req, res) => {
+    try {
+      const { userId } = req.body;
 
-//   const storage = multer.diskStorage({
-//     destination: function(req, file , cb){
-//         cb(null,'images/posts');
-//     },
-//     filename: function(req, file, cb){
-//         cb(null, req.user.id)
-//     }
-// }) 
-// }
+      const user = await userModel.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const followingList = user.following;
+
+      //finding posts from users in the followingList
+      const posts = await postModel
+        .find({
+          user_id: { $in: followingList },
+        })
+        .populate("userId");
+
+      res.status(200).json(posts);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "An error occurred" });
+    }
+  },
 };
 
 export default postController;

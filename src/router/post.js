@@ -33,5 +33,6 @@ postRouter.post("/likes/:id", likeController.updateLikes);
 postRouter.get("/user-posts/:user_id", postController.userPosts);
 postRouter.get("/recent-posts/", postController.recentPosts);
 postRouter.get("/email-posts/:email", postController.emailPosts);
+postRouter.get("/email-posts/:userId", postController.followingPosts);
 
 export default postRouter;

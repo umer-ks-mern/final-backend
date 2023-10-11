@@ -1,6 +1,5 @@
 import userModel from "../model/user.js";
 import bcryptjs from "bcryptjs";
-import mongoose from "mongoose";
 
 const userController = {
   getAll: async (req, res) => {
@@ -16,6 +15,15 @@ const userController = {
     return res.json(users);
   },
   getSingle: async (req, res) => {
+    const id  = req.params.id;
+    const user = await userModel.findById(id);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.json(user);
+  },
+  getByEmail: async (req, res) => {
     const email  = req.params.email;
     const user = await userModel.find({email:email});
     
@@ -41,9 +49,9 @@ const userController = {
   },
 
   update: async (req, res) => {
-    const { email } = req.params;
+    const { id } = req.params;
     const body=req.body;
-    const user = await userModel.findOne({ email: email });
+    const user = await userModel.findById(id);
     if (!user) 
       return res.json({ message: "User not found" });
  user.name=body.name;
