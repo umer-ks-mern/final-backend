@@ -21,9 +21,9 @@ userRouter.put(
   "/user/followers/:user_id/:follower_id",
   userController.updateFollowers
 );
-userRouter.put(
-  "/user/followings/:user_id/:following_id",
-  userController.updateFollowings
-);
+// userRouter.put(
+//   "/user/followings/:user_id/:following_id",
+//   userController.updateFollowings
+// );
 
 export default userRouter;

@@ -16,16 +16,16 @@ const userController = {
     return res.json(users);
   },
   getSingle: async (req, res) => {
-    const { email } = req.params;
-    const user = await userModel.find({ email: email });
+    const { id } = req.params;
+    const user = await userModel.findById(id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     return res.json(user);
   },
   getByEmail: async (req, res) => {
-    const { id } = req.params;
-    const user = await userModel.findById(id);
+    const { email } = req.params;
+    const user = await userModel.find({ email: email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -72,22 +72,44 @@ const userController = {
   updateFollowers: async (req, res) => {
     const { user_id, follower_id } = req.params;
     const user = await userModel.findById(user_id);
+    const follower = await userModel.findById(follower_id);
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    let result = user.followers.findIndex(
-      (elem) => elem.follower_id == follower_id
+    if (!follower) {
+      return res.status(404).json({ message: "Follower not found" });
+    }
+    const followerId = new mongoose.Types.ObjectId(follower_id);
+    const followingId = new mongoose.Types.ObjectId(user_id);
+
+    let followerResult = user.followers.findIndex((elem) =>
+      elem.equals(followerId)
     );
-    //Add Follwer if not already Avaible
-    if (result == -1) {
-      user.followers.push({ follower_id });
+    let userResult = follower.following.findIndex((elem) =>
+      elem.equals(followingId)
+    );
+
+    // Add Follower if not already available
+    if (followerResult == -1) {
+      user.followers.push(followerId);
       await user.save();
-      return res.json({ message: "1 Follwer added", user });
     } else {
-      //Remove Follwer if already Avaible
-      user.followers.splice(result, 1);
+      // Remove Follower if already available
+      user.followers.splice(followerResult, 1);
       await user.save();
-      return res.json({ message: "1 Follwer removed", user });
+    }
+
+    // Add Following if not already available
+    if (userResult == -1) {
+      follower.following.push(followingId);
+      await follower.save();
+      return res.json({ message: "1 Following added", user, follower });
+    } else {
+      // Remove Following if already available
+      follower.following.splice(userResult, 1);
+      await follower.save();
+      return res.json({ message: "1 Following removed", user, follower });
     }
   },
 
@@ -97,19 +119,20 @@ const userController = {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    let result = user.following.findIndex(
-      (elem) => elem.following_id == following_id
-    );
-    //Add Follwing if not already Avaible
+    const followingId = new mongoose.Types.ObjectId(following_id);
+
+    let result = user.following.findIndex((elem) => elem.equals(followingId));
+
+    // Add Following if not already available
     if (result == -1) {
-      user.following.push({ following_id });
+      user.following.push(followingId);
       await user.save();
-      return res.json({ message: "1 Follwer added", user });
+      return res.json({ message: "1 Following added", user });
     } else {
-      //Remove Follwing if already Avaible
+      // Remove Following if already available
       user.following.splice(result, 1);
       await user.save();
-      return res.json({ message: "1 Follwer removed", user });
+      return res.json({ message: "1 Following removed", user });
     }
   },
 
