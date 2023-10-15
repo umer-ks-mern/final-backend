@@ -11,6 +11,7 @@ const loginAuth = (req, res, next) => {
     let decoded = jwt.decode(token);
     req.user = decoded.user;
     next();
+    
   } catch (error) {
     if (error.name === "TokenExpired") {
       return res.status(401).json({ message: "Token expired" });
